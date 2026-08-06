@@ -47,3 +47,5 @@ generateCodes(node, currentCode):
 
 For an input containing only one unique character, its code can be stored as
 `0` instead of an empty string.
+
+<img width="300" align="center" alt="Huffman drawio" src="https://github.com/user-attachments/assets/b374de0e-0b5e-43a5-b2f5-56e8747d74e9" />
