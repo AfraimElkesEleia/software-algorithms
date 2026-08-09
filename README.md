@@ -49,3 +49,105 @@ For an input containing only one unique character, its code can be stored as
 `0` instead of an empty string.
 
 <img width="300" align="center" alt="Huffman drawio" src="https://github.com/user-attachments/assets/b374de0e-0b5e-43a5-b2f5-56e8747d74e9" />
+
+## Stagecoach Problem
+
+The stagecoach problem finds the minimum-cost path from the first vertex to
+the last vertex in a multistage directed graph. Each edge has a travel cost,
+and dynamic programming avoids recalculating the cheapest route from every
+intermediate vertex to the destination.
+
+Vertices must be added in stage, or topological, order. The first vertex is
+treated as the source, the last vertex is treated as the destination, and
+edges should point from an earlier vertex to a later vertex.
+
+### Building the adjacency matrix
+
+The same index represents a vertex in both the rows and columns. A matrix
+entry stores the cost of travelling from its row vertex to its column vertex.
+Missing edges are represented by positive infinity.
+
+```text
+create a vertexCount x vertexCount matrix
+
+for every row and column:
+    if row equals column:
+        matrix[row][column] = 0
+    else:
+        matrix[row][column] = infinity
+
+for every edge:
+    fromIndex = index of edge.from
+    toIndex   = index of edge.to
+    matrix[fromIndex][toIndex] = edge.weight
+```
+
+### Calculating the minimum costs
+
+The calculation starts at the destination and moves backward. The cost from
+the destination to itself is zero. For every other vertex, the algorithm
+chooses the outgoing edge that produces the smallest total cost.
+
+```text
+minimumCost[destination] = 0
+
+for current from the vertex before destination down to source:
+    minimumCost[current] = infinity
+
+    for every later vertex next:
+        if there is no edge from current to next:
+            continue
+
+        candidate = edgeCost(current, next) + minimumCost[next]
+
+        if candidate is less than minimumCost[current]:
+            minimumCost[current] = candidate
+            chosenNext[current] = next
+```
+
+The recurrence is:
+
+```text
+minimumCost(current) =
+    min(edgeCost(current, next) + minimumCost(next))
+```
+
+### Reconstructing the path
+
+Whenever a cheaper candidate is found, its next vertex is saved. Starting at
+the source and repeatedly following these saved vertices reconstructs the
+minimum-cost path.
+
+```text
+current = source
+
+while current exists:
+    add current to the path
+    current = chosenNext[current]
+```
+
+### Example
+
+```kotlin
+val graph = StageCoachGraph<String>()
+val a = StageCoachVertex("A")
+val b = StageCoachVertex("B")
+val c = StageCoachVertex("C")
+
+graph.addVertex(a)
+graph.addVertex(b)
+graph.addVertex(c)
+
+graph.addEdge(StageCoachEdge(a, b, 2.0))
+graph.addEdge(StageCoachEdge(b, c, 3.0))
+graph.addEdge(StageCoachEdge(a, c, 10.0))
+
+val result = graph.solveStageCoachProblem()
+
+println(result.cost) // 5.0
+println(result.path) // [A, B, C]
+```
+
+Building and processing the adjacency matrix takes `O(V² + E)` time and
+`O(V²)` space, where `V` is the number of vertices and `E` is the number of
+edges.
