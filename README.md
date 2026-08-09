@@ -151,3 +151,5 @@ println(result.path) // [A, B, C]
 Building and processing the adjacency matrix takes `O(V² + E)` time and
 `O(V²)` space, where `V` is the number of vertices and `E` is the number of
 edges.
+
+<img width="600" alt="DynamicProgramming Stagecoach problem drawio" src="https://github.com/user-attachments/assets/99965286-f31a-4f19-88a5-de47a8584b99" />
