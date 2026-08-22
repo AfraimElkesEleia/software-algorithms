@@ -153,3 +153,61 @@ Building and processing the adjacency matrix takes `O(V² + E)` time and
 edges.
 
 <img width="600" alt="DynamicProgramming Stagecoach problem drawio" src="https://github.com/user-attachments/assets/99965286-f31a-4f19-88a5-de47a8584b99" />
+
+## Longest Common Subsequence (LCS)
+
+The longest common subsequence is the longest sequence of characters that
+appears in both strings in the same order. Characters do not have to be next
+to each other. The algorithm stores the best LCS length for every pair of
+prefixes in a matrix. An extra empty row and column make the boundary values
+zero.
+
+### Building the matrix
+
+`matrix[row][column]` is the LCS length for the prefixes ending at
+`firstText[row]` and `secondText[column]`. If the current characters match,
+extend the diagonal subsequence. Otherwise, keep the better result from the
+cell above or the cell to the left.
+
+```text
+create a matrix with (firstText.length + 1) rows and
+    (secondText.length + 1) columns, filled with 0
+
+for row from 1 until firstText.length:
+    for column from 1 until secondText.length:
+        if firstText[row] equals secondText[column]:
+            upperLeftValue = matrix[row - 1][column - 1]
+            matrix[row][column] = upperLeftValue + 1
+        else:
+            upperValue = matrix[row - 1][column]
+            leftValue = matrix[row][column - 1]
+            matrix[row][column] = max(upperValue, leftValue)
+```
+
+### Reconstructing the solution
+
+Start at the matrix's bottom-right cell. Move toward the zero row or column.
+When the value came from a diagonal match, save that character. The saved
+characters are collected backward, so reverse them at the end.
+
+```text
+row = firstText.lastIndex
+column = secondText.lastIndex
+solution = empty sequence
+
+while row > 0 and column > 0:
+    if matrix[row][column] equals matrix[row - 1][column]:
+        row = row - 1
+    else if matrix[row][column] equals matrix[row][column - 1]:
+        column = column - 1
+    else:
+        add firstText[row] to solution
+        row = row - 1
+        column = column - 1
+
+reverse solution
+```
+
+Building the matrix takes `O(m × n)` time and `O(m × n)` space, where `m`
+and `n` are the two string lengths. Reconstructing one LCS takes `O(m + n)`
+time.
