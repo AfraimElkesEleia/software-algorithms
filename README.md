@@ -211,3 +211,5 @@ reverse solution
 Building the matrix takes `O(m × n)` time and `O(m × n)` space, where `m`
 and `n` are the two string lengths. Reconstructing one LCS takes `O(m + n)`
 time.
+
+<img width="400" alt="LCS drawio" src="https://github.com/user-attachments/assets/394bb08b-85db-4b6c-9f38-c379b06c3262" />
