@@ -268,3 +268,5 @@ reconstructSolution(dp, weights, maxWeight):
 Building the table takes `O(n × W)` time and `O(n × W)` space, where `n` is
 the number of items and `W` is the maximum weight. Reconstruction takes
 `O(n)` time.
+
+<img width="400" alt="Knapsack drawio" src="https://github.com/user-attachments/assets/00234b0f-4e7c-47e6-97a3-71cf0d64dd54" />
