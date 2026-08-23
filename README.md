@@ -213,3 +213,58 @@ and `n` are the two string lengths. Reconstructing one LCS takes `O(m + n)`
 time.
 
 <img width="400" alt="LCS drawio" src="https://github.com/user-attachments/assets/394bb08b-85db-4b6c-9f38-c379b06c3262" />
+
+## 0/1 Knapsack Problem
+
+The 0/1 knapsack problem chooses a subset of items with maximum total profit
+without exceeding a weight capacity. Each item can be selected once or not at
+all. Dynamic programming stores the best profit obtainable from the first
+`item` items at every possible `capacity`.
+
+### Building the DP table
+
+```text
+solveKnapsack(profits, weights, maxWeight):
+    itemCount = number of items
+    create dp table with (itemCount + 1) rows and (maxWeight + 1) columns,
+        filled with 0
+
+    for item from 1 to itemCount:
+        for capacity from 0 to maxWeight:
+            profitWithoutItem = dp[item - 1][capacity]
+
+            if weights[item] <= capacity:
+                remainingCapacity = capacity - weights[item]
+                profitWithItem = profits[item] + dp[item - 1][remainingCapacity]
+                dp[item][capacity] = max(profitWithoutItem, profitWithItem)
+            else:
+                dp[item][capacity] = profitWithoutItem
+
+    return dp
+```
+
+### Reconstructing selected items
+
+Compare each cell with the cell above it, starting at the bottom-right of the
+table. A different value means the current item was selected.
+
+```text
+reconstructSolution(dp, weights, maxWeight):
+    selectedItems = empty list
+    item = last item index
+    capacity = maxWeight
+
+    while item > 0 and capacity > 0:
+        if dp[item][capacity] != dp[item - 1][capacity]:
+            add item to selectedItems
+            capacity = capacity - weights[item]
+
+        item = item - 1
+
+    reverse selectedItems
+    return selectedItems
+```
+
+Building the table takes `O(n × W)` time and `O(n × W)` space, where `n` is
+the number of items and `W` is the maximum weight. Reconstruction takes
+`O(n)` time.
