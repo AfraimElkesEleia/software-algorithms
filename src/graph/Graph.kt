@@ -1,5 +1,7 @@
 package graph
 
+import java.util.ArrayDeque
+
 class Graph<T>() {
     private val edges  = mutableSetOf<Edge<T>>()
     private val vertices = mutableListOf<Vertex<T>>()
@@ -69,6 +71,28 @@ class Graph<T>() {
         }
         return selectedEdges.toList()
     }
+    fun bfs(start: Vertex<T>): List<Vertex<T>> {
+        require(start in vertices){
+            "The start vertex must be in the graph first."
+        }
+        val visitedVertices = mutableSetOf(start)
+        val queue = ArrayDeque<Vertex<T>>()
+        val traversal = mutableListOf<Vertex<T>>()
+        queue.addLast(start)
 
+        while (queue.isNotEmpty()) {
+            val currentVertex = queue.removeFirst()
+            traversal.add(currentVertex)
+            val destinations = adjacencyList[currentVertex].orEmpty()
+            for(destination in destinations){
+                val toVertex = destination.to
+                if (visitedVertices.add(toVertex)) {
+                    queue.addLast(toVertex)
+                }
+            }
+        }
+
+        return traversal
+    }
 
 }
