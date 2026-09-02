@@ -75,18 +75,23 @@ class Graph<T>() {
         require(start in vertices){
             "The start vertex must be in the graph first."
         }
-        val visitedVertices = mutableSetOf(start)
-        val queue = ArrayDeque<Vertex<T>>()
+
+        val visited = mutableSetOf(start)
         val traversal = mutableListOf<Vertex<T>>()
+        val queue = ArrayDeque<Vertex<T>>()
+
         queue.addLast(start)
 
         while (queue.isNotEmpty()) {
             val currentVertex = queue.removeFirst()
             traversal.add(currentVertex)
+
             val destinations = adjacencyList[currentVertex].orEmpty()
+
             for(destination in destinations){
                 val toVertex = destination.to
-                if (visitedVertices.add(toVertex)) {
+
+                if (visited.add(toVertex)) {
                     queue.addLast(toVertex)
                 }
             }
@@ -95,4 +100,26 @@ class Graph<T>() {
         return traversal
     }
 
+    fun dfs(start: Vertex<T>): List<Vertex<T>> {
+        require(start in vertices){
+            "The start vertex must be in the graph first."
+        }
+        val visited = mutableSetOf<Vertex<T>>()
+        val traversal = mutableListOf<Vertex<T>>()
+        dfsRecursion(start, visited, traversal)
+        return traversal
+    }
+
+    private fun dfsRecursion(
+        current: Vertex<T>,
+        visited: MutableSet<Vertex<T>>,
+        traversal: MutableList<Vertex<T>>
+    ) {
+        if (!visited.add(current)) return
+        traversal.add(current)
+        val destinations = adjacencyList[current].orEmpty()
+        for(destination in destinations){
+            dfsRecursion(destination.to, visited, traversal)
+        }
+    }
 }

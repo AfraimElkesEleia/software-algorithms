@@ -15,8 +15,13 @@ fun main() {
     graph.addEdge(v2, v3)
     graph.addEdge(v2, v4)
 
-    val traversal = graph.bfs(v0)
+    val bfsTraversal = graph.bfs(v0)
+    val dfsTraversal = graph.dfs(v0)
 
     println("BFS starting from vertex 0:")
-    println(traversal.joinToString(" -> ") { it.data.toString() })
+    println(bfsTraversal.joinToString(" -> ") { it.data.toString() })
+
+    println()
+    println("DFS starting from vertex 0:")
+    println(dfsTraversal.joinToString(" -> ") { it.data.toString() })
 }
