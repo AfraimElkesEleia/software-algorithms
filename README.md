@@ -154,6 +154,70 @@ edges.
 
 <img width="600" alt="DynamicProgramming Stagecoach problem drawio" src="https://github.com/user-attachments/assets/99965286-f31a-4f19-88a5-de47a8584b99" />
 
+## Dijkstra's Algorithm
+
+Dijkstra's algorithm finds the shortest paths from one source vertex to every
+other reachable vertex in a weighted graph. It repeatedly chooses the
+unvisited vertex with the smallest known distance and relaxes its outgoing
+edges. Edge weights must be non-negative.
+
+### Calculating shortest distances
+
+Distances start at infinity, except for the source, whose distance is zero. A
+min-priority queue selects the next vertex to process. When a shorter route is
+found, update the destination's distance and save the current vertex as its
+predecessor.
+
+```text
+for every vertex:
+    distance[vertex] = infinity
+    visited[vertex] = false
+
+distance[source] = 0
+previous[source] = null
+add (source, 0) to a min-priority queue
+
+while the queue is not empty:
+    (current, currentDistance) = remove the entry with the smallest distance
+
+    if visited[current]:
+        continue
+
+    visited[current] = true
+
+    for every edge from current to destination:
+        if visited[destination]:
+            continue
+
+        candidate = currentDistance + edge.weight
+
+        if candidate < distance[destination]:
+            distance[destination] = candidate
+            previous[destination] = current
+            add (destination, candidate) to the queue
+```
+
+### Reconstructing a path
+
+To reconstruct a path to a destination, follow its predecessors backward until
+the source is reached, then reverse the collected vertices. If the destination
+still has an infinite distance, no path exists.
+
+```text
+path = empty list
+current = destination
+
+while current exists:
+    add current to path
+    current = previous[current]
+
+reverse path
+```
+
+With a binary min-priority queue, the running time is `O((V + E) log V)` and
+the space complexity is `O(V + E)`, where `V` is the number of vertices and
+`E` is the number of edges.
+
 ## Longest Common Subsequence (LCS)
 
 The longest common subsequence is the longest sequence of characters that
