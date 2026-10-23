@@ -328,9 +328,105 @@ reconstructSolution(dp, weights, maxWeight):
     reverse selectedItems
     return selectedItems
 ```
+<img width="400" alt="Knapsack drawio" src="https://github.com/user-attachments/assets/00234b0f-4e7c-47e6-97a3-71cf0d64dd54" />
+
+Data Structures
+
+Kotlin implementations live in src/datastructures/. Dart versions with notes live in docs/dart/.
+
+Structure	Backing storage	Notes
+Linked list (singly)	nodes + head/tail	Dart
+Stack	array / list	Dart, LIFO
+Queue	array / list (Dart), linked list (Kotlin)	FIFO
+Min heap	array	Kotlin
+Hash table	array of key/value pairs, linear probing	Kotlin, FNV-1a hash
+Binary search tree	linked nodes	Kotlin
+Binary Search Tree: deleting a node
+
+Find the node and its parent first, then handle one of three cases.
+
+Leaf node. Clear the parent's link to it.
+
+if parent == null:        root = null
+else if node is left:     parent.left = null
+else:                     parent.right = null
+
+Delete a leaf node
+<img width="1200" height="562" alt="Screenshot 2026-10-16 190946" src="https://github.com/user-attachments/assets/78ab2779-71f3-4d71-b097-d69c38a099b9" />
+
+Node with one child. Copy the child's data and links into the node being deleted.
+
+child = node.right ?: node.left
+node.data  = child.data
+node.left  = child.left
+node.right = child.right
+
+Delete a node with one child
+<img width="1150" height="567" alt="Screenshot 2026-10-16 190708" src="https://github.com/user-attachments/assets/1c01cd89-a533-4b30-a9cc-e4c4c9d3231c" />
+
+Node with two children. Find the in-order successor (the leftmost node of the right subtree). Copy its data into the node being deleted, then attach the successor's right subtree to the successor's parent.
+
+parent = null
+current = node.right
+while current.left != null:
+    parent = current
+    current = current.left
+
+node.data = current.data
+
+if parent == null:
+    node.right = current.right
+else:
+    parent.left = current.right
+
+Delete a node with two children
+<img width="1180" height="637" alt="Screenshot 2026-10-16 190702" src="https://github.com/user-attachments/assets/3000ff4f-24b8-4404-ba37-0694b1840be4" />
+
+Deleting takes O(h) time, where h is the height of the tree.
+
+Min Heap
+
+The heap is stored in an array. For the node at index i, the parent is at (i - 1) / 2, the left child at 2i + 1 and the right child at 2i + 2.
+
+Insertion. Add the value at the end, then swap it upward while it is smaller than its parent.
+
+add data to the end of the array
+i = last index
+
+while i != 0 and array[i] < array[parent(i)]:
+    swap(i, parent(i))
+    i = parent(i)
+
+Min heap insertion
+<img width="1526" height="682" alt="Screenshot 2026-10-16 200111" src="https://github.com/user-attachments/assets/ec7d8816-8a61-499d-8ded-4c96934812aa" />
+
+Pop. Remove the root, move the last element to the root, then swap it downward with its smaller child until the heap order is restored.
+
+data = array[0]
+array[0] = last element
+remove the last element
+i = 0
+
+while true:
+    left  = 2i + 1
+    right = 2i + 2
+    smallest = i
+
+    if left  < size and array[left]  < array[smallest]: smallest = left
+    if right < size and array[right] < array[smallest]: smallest = right
+    if smallest == i: break
+
+    swap(i, smallest)
+    i = smallest
+
+return data
+
+Min heap pop
+<img width="980" height="575" alt="Screenshot 2026-10-16 234835" src="https://github.com/user-attachments/assets/6785d355-4682-4cbe-b9fe-639993b22809" />
+
+Insertion and pop both take O(log n) time. Space is O(n).
 
 Building the table takes `O(n × W)` time and `O(n × W)` space, where `n` is
 the number of items and `W` is the maximum weight. Reconstruction takes
 `O(n)` time.
 
-<img width="400" alt="Knapsack drawio" src="https://github.com/user-attachments/assets/00234b0f-4e7c-47e6-97a3-71cf0d64dd54" />
